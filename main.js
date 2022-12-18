@@ -29,7 +29,6 @@ let commentsArray = []
 let nameList = [] 
 
 
-
 // 選出贏家！
 document.querySelector("#winnerButton").addEventListener("click", event => {
 
