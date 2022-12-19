@@ -94,11 +94,19 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
     // hide comment & winner
     hideWinner()
     hideComment()
-
+    
     // get the videoID from the video url
-    const regex = /v=([^&]+)/
+    // 需要有兩種，一個是網頁的網址，一個是youtubeAPP的
+    let regex = ""
+    if (inputValue.includes("v=")){
+        regex = /v=([^&]+)/ //網頁
+    } else {
+        regex = /be\/([^&]+)/ //youtube app
+    }
+
     const match = inputValue.match(regex)
     videoId = match[1]
+        
     // API for video info
     const URL = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`;
     console.log(videoId)
