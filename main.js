@@ -9,7 +9,7 @@ Create a credential.
 A screen will appear with the API key.
 */
 
-// videoID /
+// videoID
 // example: https://www.youtube.com/watch?v=aojsUEPIhZQ&t=6215s&ab_channel=CharluluStory
 // id comes after the "v=": aojsUEIhZQ
 
@@ -27,6 +27,7 @@ let videoId = '';
 // video name list
 let commentsArray = []
 let nameList = [] 
+
 
 
 // 選出贏家！
@@ -83,7 +84,10 @@ document.querySelector("#reloadButton").addEventListener("click", (event) => {
     document.location.reload();
 })
 
+
+
 // 尋找留言小夥伴！
+//
 document.querySelector("#sendButton").addEventListener("click", (event) => {
     // prevent the default form submission behavior and retrieve the value of the URL input field.
     // without preventDefault() you can't get the value in input
@@ -94,22 +98,21 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
     // hide comment & winner
     hideWinner()
     hideComment()
-    
-    // get the videoID from the video url
-    // 需要有兩種，一個是網頁的網址，一個是youtubeAPP的
-    let regex = ""
-    if (inputValue.includes("v=")){
-        regex = /v=([^&]+)/ //網頁
-    } else {
-        regex = /be\/([^&]+)/ //youtube app
-    }
 
-    const match = inputValue.match(regex)
-    videoId = match[1]
-        
+    // get the videoID from the video url
+    // 兩種，一個是youtbue網頁，一個是youtube APP
+    let regex = /v=([^&]+)|be\/([^&]+)/;
+    const match = inputValue.match(regex);
+    videoId = match[1] || match[2];
+
+    // match=( whole match,(group1),(group2) )
+    // 參考文件：https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/String/match
+    console.log(`match =${match}`)
+    console.log(`match lenght=${match.length}`)
+    console.log(`videoID =${videoId}`)
+
     // API for video info
     const URL = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`;
-    console.log(videoId)
     console.log(URL)
 
     // API for comment
