@@ -38,7 +38,6 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
     if (nameList.length === 0){
         alert("你還沒有輸入影片網址唷！")
     } else {
-        const myInterval = setInterval(myWinnerDisplay, 70);
         // set up 
         const spinTimes = 20
         let  i = 0
@@ -46,6 +45,9 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
         let winner = ""
 
         // pick winner
+        const myInterval = setInterval(myWinnerDisplay, 70);
+
+        //function pick winner
         function myWinnerDisplay() {
                         i ++
             if (i > spinTimes){
@@ -63,7 +65,7 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
 
             // show comment
             document.querySelector("#winnerCommentLabel").style.display = "block"
-            document.querySelector("#winnerComment").textContent = message
+            document.querySelector("#winnerComment").innerHTML = message
         }
     }
 }) 
