@@ -146,6 +146,9 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
         nameList = []
         // reset name list disply
         document.querySelector("#nameList").innerHTML = ""
+
+        // reset name tot
+        document.querySelector("#nameTot").innerText = `Usuarios:`
         
         // get comentor's names
         commentsArray.map(item => { 
@@ -161,5 +164,8 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
             sp.classList.add("name-tag","bg-primary","text-white")
             document.querySelector("#nameList").appendChild(sp)
         })
+
+        // display total number of users
+        document.querySelector("#nameTot").innerText = `Usuarios: ${nameList.length} en total`
     }
 })
