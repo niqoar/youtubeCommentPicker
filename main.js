@@ -166,6 +166,7 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
         })
 
         // display total number of users
+        console.log(`nameTot = ${nameList.length}`)
         document.querySelector("#nameTot").innerText = `Usuarios: ${nameList.length} en total`
     }
 })
