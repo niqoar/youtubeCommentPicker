@@ -36,7 +36,7 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
     hideComment()
 
     if (nameList.length === 0){
-        alert("你還沒有輸入影片網址唷！")
+        alert("¡Ingresa el link del video!")
     } else {
         // set up 
         const spinTimes = 20
