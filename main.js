@@ -118,7 +118,7 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
     console.log(URL)
 
     // API for comment
-    const maxResult = 100
+    const maxResult = 300
     const URL2 = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=${maxResult}&order=time&videoId=${videoId}&key=${API_KEY}`
     console.log(URL2)
 
