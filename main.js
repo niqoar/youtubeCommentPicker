@@ -87,9 +87,11 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
     console.log(`videoID =${videoId}`);
 
     const URL = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`;
+    console.log(URL);
 
-    const maxResult = 300;
+    const maxResult = 100;
     const URL2 = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=${maxResult}&order=time&videoId=${videoId}&key=${API_KEY}`;
+    console.log(URL2);
 
     getData(URL, URL2);
 
@@ -118,17 +120,20 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
             commentsArray.map(item => {
                 nameList.push(item.snippet.topLevelComment.snippet.authorDisplayName);
             });
-            console.log(`nameList = ${nameList}`);
+            console.log(`nameList (before deduplication) = ${nameList}`);
 
-            nameList.map(name => {
+            const uniqueNameList = [...new Set(nameList)];
+            console.log(`nameList (after deduplication) = ${uniqueNameList}`);
+
+            uniqueNameList.map(name => {
                 const sp = document.createElement("span");
                 sp.innerText = name;
                 sp.classList.add("name-tag", "bg-primary", "text-white");
                 document.querySelector("#nameList").appendChild(sp);
             });
 
-            console.log(`nameTot = ${nameList.length}`);
-            document.querySelector("#nameTot").innerText = `Usuarios: ${nameList.length} en total`;
+            console.log(`nameTot = ${uniqueNameList.length}`);
+            document.querySelector("#nameTot").innerText = `Usuarios: ${uniqueNameList.length} en total`;
         }
     }
 });
