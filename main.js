@@ -137,3 +137,28 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
         }
     }
 });
+
+document.getElementById('rainButton').addEventListener('click', function() {
+    const container = document.getElementById('emoteContainer');
+
+    for (let i = 0; i < 30; i++) {
+        createEmote(container);
+    }
+});
+
+function createEmote(container) {
+    const emote = document.createElement('div');
+    emote.classList.add('emote');
+
+    const startX = Math.random() * window.innerWidth;
+    const duration = Math.random() * 3 + 2;
+
+    emote.style.left = `${startX}px`;
+    emote.style.animationDuration = `${duration}s`;
+
+    container.appendChild(emote);
+
+    emote.addEventListener('animationend', () => {
+        emote.remove();
+    });
+}
