@@ -49,6 +49,10 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
                 number = Math.floor(Math.random() * nameList.length);
                 winner = nameList[number];
                 document.querySelector("#winner").innerText = winner;
+
+                for (let j = 0; j < 30; j++) {
+                    createEmote(document.getElementById('emoteContainer'));
+                }
             }
         }
 
@@ -135,14 +139,6 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
             console.log(`nameTot = ${uniqueNameList.length}`);
             document.querySelector("#nameTot").innerText = `Usuarios: ${uniqueNameList.length} en total`;
         }
-    }
-});
-
-document.getElementById('rainButton').addEventListener('click', function() {
-    const container = document.getElementById('emoteContainer');
-
-    for (let i = 0; i < 30; i++) {
-        createEmote(container);
     }
 });
 
