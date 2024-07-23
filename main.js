@@ -60,9 +60,11 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
             document.querySelector("#winnerCommentLabel").style.display = "block";
             document.querySelector("#winnerComment").innerHTML = message;
 
+            /*
             for (let j = 0; j < 30; j++) {
                     createEmote(document.getElementById('emoteContainer'));
             }
+            */
 
             previousWinners.push(winner);
             console.log(`previousWinners = ${previousWinners}`);
