@@ -25,6 +25,7 @@ let videoId = '';
 // Model
 let commentsArray = [];
 let nameList = [];
+let previousWinners = [];
 
 // Choose a winner
 document.querySelector("#winnerButton").addEventListener("click", event => {
@@ -46,8 +47,10 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
                 clearInterval(myInterval);
                 displayComment();
             } else {
-                number = Math.floor(Math.random() * nameList.length);
-                winner = nameList[number];
+                do {
+                    number = Math.floor(Math.random() * nameList.length);
+                    winner = nameList[number];
+                } while (previousWinners.includes(winner) && previousWinners.length < nameList.length);
                 document.querySelector("#winner").innerText = winner;
             }
         }
@@ -60,6 +63,9 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
             for (let j = 0; j < 30; j++) {
                     createEmote(document.getElementById('emoteContainer'));
             }
+
+            previousWinners.push(winner);
+            console.log(`previousWinners = ${previousWinners}`);
         }
     }
 });
@@ -91,11 +97,9 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
     console.log(`videoID =${videoId}`);
 
     const URL = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`;
-    console.log(URL);
 
-    const maxResult = 100;
+    const maxResult = 250;
     const URL2 = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=${maxResult}&order=time&videoId=${videoId}&key=${API_KEY}`;
-    console.log(URL2);
 
     getData(URL, URL2);
 
