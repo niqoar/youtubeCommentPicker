@@ -44,6 +44,12 @@ drumRollButton.addEventListener('click', () => {
     chooseWinner();
 });
 
+// Winner button
+const winnerButton = document.getElementById('winnerButton');
+winnerButton.addEventListener('click', () => {
+    chooseWinner();
+});
+
 // Choose a winner
 function chooseWinner() {
     hideComment();
