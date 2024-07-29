@@ -40,8 +40,7 @@ const soundDuration = 4000;
 // Drum roll button
 const drumRollButton = document.getElementById('drumRollButton');
 drumRollButton.addEventListener('click', () => {
-    const audio = new Audio('drum_roll_sound.mp3');
-    audio.play();
+    
     chooseWinner();
 });
 
@@ -61,6 +60,9 @@ function chooseWinner() {
         let number = 0;
         let winner = "";
 
+        const audio = new Audio('drum_roll_sound.mp3');
+        audio.play();
+        
         const myInterval = setInterval(myWinnerDisplay, intervalTime);
 
         function myWinnerDisplay() {
@@ -112,7 +114,7 @@ document.querySelector("#sendButton").addEventListener("click", (event) => {
     const match = inputValue.match(regex);
 
     if (!match || (!match[1] && !match[2])) {
-        alert("Invalid URL. Please enter a valid YouTube video URL.");
+        alert("URL inválida. Ingresá una URL de Youtube válida.");
         document.getElementById("loadingNameList").style.display = "none";
         document.getElementById("loadingWinner").style.display = "none";
         return;
