@@ -41,13 +41,13 @@ const soundDuration = 4000;
 const drumRollButton = document.getElementById('drumRollButton');
 drumRollButton.addEventListener('click', () => {
     
-    chooseWinner(true);
+    chooseWinner('yes');
 });
 
 // Winner button
 const winnerButton = document.getElementById('winnerButton');
 winnerButton.addEventListener('click', () => {
-    chooseWinner(false);
+    chooseWinner();
 });
 
 // Choose a winner
@@ -66,7 +66,7 @@ function chooseWinner(playAudio) {
         let number = 0;
         let winner = "";
 
-        if (playAudio) {
+        if (playAudio == 'yes') {
             const audio = new Audio('drum_roll_sound.mp3');
             audio.play();
         }
