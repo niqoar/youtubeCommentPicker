@@ -61,12 +61,15 @@ function chooseWinner(playAudio) {
     } else {
         const spinDuration = soundDuration;
         const intervalTime = 70;
-        const spinTimes = Math.floor(spinDuration / intervalTime);
+        var spinTimes = 30;
         let i = 0;
         let number = 0;
         let winner = "";
 
         if (playAudio == 'yes') {
+
+            spinTimes = Math.floor(spinDuration / intervalTime)
+            
             const audio = new Audio('drum_roll_sound.mp3');
             audio.play();
         }
