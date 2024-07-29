@@ -27,12 +27,29 @@ let commentsArray = [];
 let nameList = [];
 let previousWinners = [];
 
+// Toggle dark mode
+const darkModeButton = document.getElementById('darkModeButton');
+const darkModeIcon = document.getElementById('darkModeIcon');
+darkModeButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    darkModeIcon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
+
+// Drum roll button
+const drumRollButton = document.getElementById('drumRollButton');
+drumRollButton.addEventListener('click', () => {
+    const audio = new Audio('drum_roll_sound.mp3'); // Add path to your drum roll sound file
+    audio.play();
+});
+
 // Choose a winner
 document.querySelector("#winnerButton").addEventListener("click", event => {
     hideComment();
+    document.getElementById("loadingWinner").style.display = "block";
 
     if (nameList.length === 0) {
         alert("¡Ingresa el link del video!");
+        document.getElementById("loadingWinner").style.display = "none";
     } else {
         const spinTimes = 20;
         let i = 0;
@@ -46,6 +63,7 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
             if (i > spinTimes) {
                 clearInterval(myInterval);
                 displayComment();
+                document.getElementById("loadingWinner").style.display = "none";
             } else {
                 do {
                     number = Math.floor(Math.random() * nameList.length);
@@ -59,13 +77,7 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
             const message = commentsArray[number].snippet.topLevelComment.snippet.textDisplay;
             document.querySelector("#winnerCommentLabel").style.display = "block";
             document.querySelector("#winnerComment").innerHTML = message;
-
-            /*
-            for (let j = 0; j < 30; j++) {
-                    createEmote(document.getElementById('emoteContainer'));
-            }
-            */
-
+			
             previousWinners.push(winner);
             console.log(`previousWinners = ${previousWinners}`);
         }
@@ -81,86 +93,94 @@ function hideWinner() {
     document.querySelector("#winner").textContent = "";
 }
 
-document.querySelector("#reloadButton").addEventListener("click", (event) => {
-    document.location.reload();
-});
-
 document.querySelector("#sendButton").addEventListener("click", (event) => {
     const inputValue = document.querySelector("#urlInput").value;
     hideWinner();
     hideComment();
 
+    document.getElementById("loadingNameList").style.display = "block";
+    document.getElementById("loadingWinner").style.display = "block";
+    document.querySelector("#nameList").innerHTML = "";
+    document.querySelector("#title").innerHTML = "";
+
     let regex = /v=([^&]+)|be\/([^&]+)/;
     const match = inputValue.match(regex);
-    videoId = match[1] || match[2];
+
+    if (!match || (!match[1] && !match[2])) {
+        alert("Invalid URL. Please enter a valid YouTube video URL.");
+        document.getElementById("loadingNameList").style.display = "none";
+        document.getElementById("loadingWinner").style.display = "none";
+        return;
+    }
+
+    const videoId = match[1] || match[2];
 
     console.log(`match =${match}`);
     console.log(`match length=${match.length}`);
     console.log(`videoID =${videoId}`);
 
     const URL = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`;
-
     const maxResult = 250;
     const URL2 = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=${maxResult}&order=time&videoId=${videoId}&key=${API_KEY}`;
 
     getData(URL, URL2);
 
     async function getData(videoURL, commentsURL, nextPageToken = '') {
-        const responseInfo = await fetch(videoURL);
-        let finalCommentsURL = commentsURL;
-        if (nextPageToken) {
-            finalCommentsURL += `&pageToken=${nextPageToken}`;
-        }
-        const responseComments = await fetch(finalCommentsURL);
-        const infoData = await responseInfo.json();
-        const commentsData = await responseComments.json();
+        try {
+            const responseInfo = await fetch(videoURL);
+            if (!responseInfo.ok) {
+                throw new Error("No se pudo obtener la información del video.");
+            }
+            const finalCommentsURL = nextPageToken ? `${commentsURL}&pageToken=${nextPageToken}` : commentsURL;
+            const responseComments = await fetch(finalCommentsURL);
+            if (!responseComments.ok) {
+                throw new Error("No se pudieron obtener los comentarios.");
+            }
+            const infoData = await responseInfo.json();
+            const commentsData = await responseComments.json();
 
-        const videoTitle = infoData.items[0].snippet.title;
-        document.querySelector("#title").innerHTML = videoTitle;
+            if (!infoData.items || !infoData.items.length) {
+                throw new Error("No se encontró información del vídeo.");
+            }
 
-        commentsArray = [...commentsArray, ...commentsData.items];
+            const videoTitle = infoData.items[0].snippet.title;
+            document.querySelector("#title").innerHTML = videoTitle;
 
-        if (commentsData.nextPageToken) {
-            await getData(videoURL, commentsURL, commentsData.nextPageToken);
-        } else {
-            nameList = [];
-            document.querySelector("#nameList").innerHTML = "";
-            document.querySelector("#nameTot").innerText = `Usuarios:`;
+            commentsArray = [...commentsArray, ...commentsData.items];
 
-            commentsArray.map(item => {
-                nameList.push(item.snippet.topLevelComment.snippet.authorDisplayName);
-            });
-            console.log(`nameList (before deduplication) = ${nameList}`);
+            if (commentsData.nextPageToken) {
+                await getData(videoURL, commentsURL, commentsData.nextPageToken);
+            } else {
+                nameList = [];
+                document.querySelector("#nameList").innerHTML = "";
+                document.querySelector("#nameTot").innerText = `Usuarios:`;
 
-            const uniqueNameList = [...new Set(nameList)];
-            console.log(`nameList (after deduplication) = ${uniqueNameList}`);
+                commentsArray.map(item => {
+                    nameList.push(item.snippet.topLevelComment.snippet.authorDisplayName);
+                });
+                console.log(`nameList (before deduplication) = ${nameList}`);
 
-            uniqueNameList.map(name => {
-                const sp = document.createElement("span");
-                sp.innerText = name;
-                sp.classList.add("name-tag", "bg-primary", "text-white");
-                document.querySelector("#nameList").appendChild(sp);
-            });
+                const uniqueNameList = [...new Set(nameList)];
+                console.log(`nameList (after deduplication) = ${uniqueNameList}`);
 
-            console.log(`nameTot = ${uniqueNameList.length}`);
-            document.querySelector("#nameTot").innerText = `Usuarios: ${uniqueNameList.length} en total`;
+                uniqueNameList.map(name => {
+                    const sp = document.createElement("span");
+                    sp.innerText = name;
+                    sp.classList.add("name-tag", "bg-primary", "text-white");
+                    document.querySelector("#nameList").appendChild(sp);
+                });
+
+                console.log(`nameTot = ${uniqueNameList.length}`);
+                document.querySelector("#nameTot").innerText = `Usuarios: ${uniqueNameList.length} en total`;
+
+                document.getElementById("loadingNameList").style.display = "none";
+                document.getElementById("loadingWinner").style.display = "none";
+            }
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+            console.error(error);
+            document.getElementById("loadingNameList").style.display = "none";
+            document.getElementById("loadingWinner").style.display = "none";
         }
     }
 });
-
-function createEmote(container) {
-    const emote = document.createElement('div');
-    emote.classList.add('emote');
-
-    const startX = Math.random() * window.innerWidth;
-    const duration = Math.random() * 3 + 2;
-
-    emote.style.left = `${startX}px`;
-    emote.style.animationDuration = `${duration}s`;
-
-    container.appendChild(emote);
-
-    emote.addEventListener('animationend', () => {
-        emote.remove();
-    });
-}
