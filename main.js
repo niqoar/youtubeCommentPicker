@@ -41,17 +41,17 @@ const soundDuration = 4000;
 const drumRollButton = document.getElementById('drumRollButton');
 drumRollButton.addEventListener('click', () => {
     
-    chooseWinner();
+    chooseWinner(true);
 });
 
 // Winner button
 const winnerButton = document.getElementById('winnerButton');
 winnerButton.addEventListener('click', () => {
-    chooseWinner();
+    chooseWinner(false);
 });
 
 // Choose a winner
-function chooseWinner() {
+function chooseWinner(playAudio) {
     hideComment();
     document.getElementById("loadingWinner").style.display = "block";
 
@@ -66,8 +66,10 @@ function chooseWinner() {
         let number = 0;
         let winner = "";
 
-        const audio = new Audio('drum_roll_sound.mp3');
-        audio.play();
+        if (playAudio) {
+            const audio = new Audio('drum_roll_sound.mp3');
+            audio.play();
+        }
         
         const myInterval = setInterval(myWinnerDisplay, intervalTime);
 
