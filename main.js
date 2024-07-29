@@ -35,15 +35,18 @@ darkModeButton.addEventListener('click', () => {
     darkModeIcon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
 });
 
+const soundDuration = 4000;
+
 // Drum roll button
 const drumRollButton = document.getElementById('drumRollButton');
 drumRollButton.addEventListener('click', () => {
-    const audio = new Audio('drum_roll_sound.mp3'); // Add path to your drum roll sound file
+    const audio = new Audio('drum_roll_sound.mp3');
     audio.play();
+    chooseWinner();
 });
 
 // Choose a winner
-document.querySelector("#winnerButton").addEventListener("click", event => {
+function chooseWinner() {
     hideComment();
     document.getElementById("loadingWinner").style.display = "block";
 
@@ -51,12 +54,14 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
         alert("¡Ingresa el link del video!");
         document.getElementById("loadingWinner").style.display = "none";
     } else {
-        const spinTimes = 20;
+        const spinDuration = soundDuration;
+        const intervalTime = 70;
+        const spinTimes = Math.floor(spinDuration / intervalTime);
         let i = 0;
         let number = 0;
         let winner = "";
 
-        const myInterval = setInterval(myWinnerDisplay, 70);
+        const myInterval = setInterval(myWinnerDisplay, intervalTime);
 
         function myWinnerDisplay() {
             i++;
@@ -77,12 +82,12 @@ document.querySelector("#winnerButton").addEventListener("click", event => {
             const message = commentsArray[number].snippet.topLevelComment.snippet.textDisplay;
             document.querySelector("#winnerCommentLabel").style.display = "block";
             document.querySelector("#winnerComment").innerHTML = message;
-			
+            
             previousWinners.push(winner);
             console.log(`previousWinners = ${previousWinners}`);
         }
     }
-});
+}
 
 function hideComment() {
     document.querySelector("#winnerCommentLabel").style.display = "none";
