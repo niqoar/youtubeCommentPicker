@@ -53,11 +53,9 @@ winnerButton.addEventListener('click', () => {
 // Choose a winner
 function chooseWinner(playAudio) {
     hideComment();
-    document.getElementById("loadingWinner").style.display = "block";
 
     if (nameList.length === 0) {
         alert("¡Ingresa el link del video!");
-        document.getElementById("loadingWinner").style.display = "none";
     } else {
         const spinDuration = soundDuration;
         const intervalTime = 70;
@@ -81,7 +79,6 @@ function chooseWinner(playAudio) {
             if (i > spinTimes) {
                 clearInterval(myInterval);
                 displayComment();
-                document.getElementById("loadingWinner").style.display = "none";
             } else {
                 do {
                     number = Math.floor(Math.random() * nameList.length);
